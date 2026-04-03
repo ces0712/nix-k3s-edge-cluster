@@ -1,0 +1,27 @@
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  checks:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Prepare runner SSH identities
+        shell: bash
+        env:
+          SECRETS_REPO_IDENTITY_FILE: ${{ vars.SECRETS_REPO_IDENTITY_FILE }}
+          EDGE_IDENTITY_FILE: ${{ vars.EDGE_IDENTITY_FILE }}
+        run: |
+          ./scripts/prepare-runner-ssh.sh
+
+      - name: Run repo checks
+        shell: bash
+        run: |
+          just check

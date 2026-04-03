@@ -1,0 +1,30 @@
+name: backup-validate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 8 * * 1'
+
+jobs:
+  backup-validate:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Prepare runner SSH identities
+        shell: bash
+        env:
+          SECRETS_REPO_IDENTITY_FILE: ${{ vars.SECRETS_REPO_IDENTITY_FILE }}
+          EDGE_IDENTITY_FILE: ${{ vars.EDGE_IDENTITY_FILE }}
+        run: |
+          ./scripts/prepare-runner-ssh.sh
+
+      - name: Validate backup readiness
+        shell: bash
+        env:
+          TARGET_HOST: ${{ secrets.EDGE_TARGET_HOST }}
+          DEPLOY_USER: nixos
+          IDENTITY_FILE: ${{ env.EDGE_IDENTITY_FILE }}
+        run: |
+          just backup-validate

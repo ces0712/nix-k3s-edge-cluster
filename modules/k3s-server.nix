@@ -1,8 +1,16 @@
-{ pkgs, ... }: {
+{lib, ...}: {
   services.k3s = {
     enable = true;
     role = "server";
-    extraFlags = "--disable traefik";
+    clusterInit = true;
+    extraFlags = toString [
+      "--disable=traefik"
+      "--disable=servicelb"
+      "--write-kubeconfig-mode=0640"
+    ];
   };
-  networking.firewall.allowedTCPPorts = [ 6443 ];
+
+  environment.variables.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = lib.mkAfter [6443];
 }

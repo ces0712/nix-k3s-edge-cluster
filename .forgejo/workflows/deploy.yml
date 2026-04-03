@@ -1,0 +1,47 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Prepare runner SSH identities
+        shell: bash
+        env:
+          SECRETS_REPO_IDENTITY_FILE: ${{ vars.SECRETS_REPO_IDENTITY_FILE }}
+          EDGE_IDENTITY_FILE: ${{ vars.EDGE_IDENTITY_FILE }}
+        run: |
+          ./scripts/prepare-runner-ssh.sh
+
+      - name: Check tailnet connectivity
+        shell: bash
+        run: |
+          tailscale status --self
+
+      - name: Deploy with Colmena
+        shell: bash
+        env:
+          TARGET_HOST: ${{ secrets.EDGE_TARGET_HOST }}
+          DEPLOY_USER: nixos
+          IDENTITY_FILE: ${{ env.EDGE_IDENTITY_FILE }}
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+        run: |
+          just deploy
+
+      - name: Validate deployment
+        shell: bash
+        env:
+          TARGET_HOST: ${{ secrets.EDGE_TARGET_HOST }}
+          DEPLOY_USER: nixos
+          IDENTITY_FILE: ${{ env.EDGE_IDENTITY_FILE }}
+        run: |
+          just validate
