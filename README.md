@@ -140,18 +140,15 @@ CI is designed to:
 The workflows assume the runner owns the SSH identities locally instead of
 reconstructing private keys from CI secrets:
 
-- `SECRETS_REPO_IDENTITY_FILE` points to the runner-local key used to fetch
-  `infrastructure-secrets`
 - `EDGE_IDENTITY_FILE` points to the runner-local key used by Colmena to reach
   the target over Tailscale
-- if those variables are not set, the workflows default to
-  `~/.ssh/infrastructure-secrets` and `~/.ssh/edge-cluster`
+- if it is not set, the deploy scripts fall back to your existing local SSH
+  configuration and agent state
 
-That keeps the Mac mini as the trust anchor and leaves the workflow responsible
-for invoking the deploy scripts over the runner's existing tailnet access. The helper script
-exports an ephemeral `GIT_SSH_COMMAND` for the private flake input instead of
-rewriting the runner's global SSH config. Colmena still uses SSH as its
-transport, but only to the Tailscale/MagicDNS target you provide.
+That keeps the Mac mini as the trust anchor and leaves the workflows
+responsible for invoking the deploy scripts over the runner's existing tailnet
+access. Colmena still uses SSH as its transport, but only to the
+Tailscale/MagicDNS target you provide.
 
 ## Upgrade Strategy
 
