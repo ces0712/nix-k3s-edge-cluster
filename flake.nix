@@ -114,8 +114,6 @@
       cloud-edge-1 = import ./hosts/cloud-edge-1/deployment.nix;
     };
 
-    colmenaHive = colmena.lib.makeHive self.outputs.colmena;
-
     checks = forAllSystems (system: let
       pkgs = pkgsFor system;
       rustdeskEnabled = self.nixosConfigurations.cloud-edge-1.config.edgeCluster.apps.rustdesk.enable;

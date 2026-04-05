@@ -55,10 +55,10 @@ build-eval:
   nix eval '.#nixosConfigurations.cloud-edge-1.config.system.build.toplevel.drvPath' --raw > /dev/null
 
 colmena-eval:
-  nix eval '.#colmenaHive.nodes.cloud-edge-1.config.deployment.targetHost' --raw > /dev/null
+  nix eval '.#colmena.cloud-edge-1.deployment.targetHost' --raw > /dev/null
 
 flake-check:
-  nix flake check
+  nix flake check --all-systems
 
 check: fmt-check build-eval colmena-eval flake-check
 
