@@ -13,14 +13,14 @@ in
     users.users.restic-backup = {
       isSystemUser = true;
       group = "restic-backup";
-      home = "${config.edgeCluster.stateDir}/restic";
+      home = cfg.stateDir;
       createHome = true;
     };
 
     users.groups.restic-backup = {};
 
     systemd.tmpfiles.rules = [
-      "d ${config.edgeCluster.stateDir}/restic 0750 restic-backup restic-backup -"
+      "d ${cfg.stateDir} 0750 restic-backup restic-backup -"
     ];
 
     sops.secrets =

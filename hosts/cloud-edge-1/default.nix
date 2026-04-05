@@ -52,6 +52,7 @@
 
     backup = {
       enable = true;
+      stateDir = "/srv/restic-backup";
       paths = [
         "/srv/edge-cluster/rustdesk"
         "/var/lib/rancher/k3s/server/token"

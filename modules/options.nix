@@ -91,6 +91,11 @@ in {
     backup = {
       enable = mkEnableOption "restic backups for cluster state and workloads";
 
+      stateDir = mkOption {
+        type = types.str;
+        default = "/srv/restic-backup";
+      };
+
       paths = mkOption {
         type = types.listOf types.str;
         default = [];

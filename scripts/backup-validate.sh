@@ -7,6 +7,9 @@ TARGET_HOST="${TARGET_HOST:-${TAILNET_HOST:-}}"
 TARGET_HOST="${TARGET_HOST:?TARGET_HOST or TAILNET_HOST is required}"
 DEPLOY_USER="${DEPLOY_USER:-nixos}"
 IDENTITY_FILE="${IDENTITY_FILE:-}"
+RESTIC_REPOSITORY_SECRET="${RESTIC_REPOSITORY_SECRET:-restic/borgbase_repo}"
+RESTIC_PASSWORD_SECRET="${RESTIC_PASSWORD_SECRET:-restic/borgbase_password}"
+RESTIC_ENVIRONMENT_SECRET="${RESTIC_ENVIRONMENT_SECRET:-}"
 
 ssh_ctx="$(ssh_target "${DEPLOY_USER}" "${TARGET_HOST}" "${IDENTITY_FILE}")"
 SSH_OPTS="${ssh_ctx%%|*}"
@@ -23,16 +26,10 @@ else
   SUDO=""
 fi
 
-backup_enabled="$($SUDO nixos-option edgeCluster.backup.enable 2>/dev/null | awk "END { print \$NF }")"
-
-if [ "${backup_enabled}" != "true" ]; then
+if ! $SUDO systemctl list-unit-files restic-backups-edge-cluster.timer --no-legend 2>/dev/null | grep -q "^restic-backups-edge-cluster.timer"; then
   echo "Backup module disabled on target; skipping backup validation."
   exit 0
 fi
-
-repo_secret="$($SUDO nixos-option edgeCluster.backup.repositorySecret 2>/dev/null | awk "END { print \$NF }")"
-password_secret="$($SUDO nixos-option edgeCluster.backup.passwordSecret 2>/dev/null | awk "END { print \$NF }")"
-env_secret="$($SUDO nixos-option edgeCluster.backup.environmentSecret 2>/dev/null | awk "END { print \$NF }")"
 
 echo "unit state:"
 $SUDO systemctl is-enabled restic-backups-edge-cluster.timer
@@ -42,8 +39,8 @@ $SUDO systemctl is-active restic-backups-edge-cluster.timer
 echo
 echo "secret files:"
 for path in \
-  "/run/secrets/${repo_secret}" \
-  "/run/secrets/${password_secret}"
+  "/run/secrets/'"${RESTIC_REPOSITORY_SECRET}"'" \
+  "/run/secrets/'"${RESTIC_PASSWORD_SECRET}"'"
 do
   if $SUDO test -f "$path"; then
     echo "ok  $path"
@@ -53,8 +50,8 @@ do
   fi
 done
 
-if [ "${env_secret}" != "null" ]; then
-  path="/run/secrets/${env_secret}"
+if [ -n "'"${RESTIC_ENVIRONMENT_SECRET}"'" ]; then
+  path="/run/secrets/'"${RESTIC_ENVIRONMENT_SECRET}"'"
   if $SUDO test -f "$path"; then
     echo "ok  $path"
   else
@@ -65,16 +62,16 @@ fi
 
 echo
 echo "repository access:"
-if [ "${env_secret}" = "null" ]; then
+if [ -z "'"${RESTIC_ENVIRONMENT_SECRET}"'" ]; then
   $SUDO -u restic-backup restic snapshots \
-    --repository-file "/run/secrets/${repo_secret}" \
-    --password-file "/run/secrets/${password_secret}" \
+    --repository-file "/run/secrets/'"${RESTIC_REPOSITORY_SECRET}"'" \
+    --password-file "/run/secrets/'"${RESTIC_PASSWORD_SECRET}"'" \
     --compact
 else
   $SUDO -u restic-backup restic snapshots \
-    --repository-file "/run/secrets/${repo_secret}" \
-    --password-file "/run/secrets/${password_secret}" \
-    --environment-file "/run/secrets/${env_secret}" \
+    --repository-file "/run/secrets/'"${RESTIC_REPOSITORY_SECRET}"'" \
+    --password-file "/run/secrets/'"${RESTIC_PASSWORD_SECRET}"'" \
+    --environment-file "/run/secrets/'"${RESTIC_ENVIRONMENT_SECRET}"'" \
     --compact
 fi
 '

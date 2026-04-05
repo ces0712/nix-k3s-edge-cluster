@@ -59,7 +59,8 @@ That lets us keep the same deploy-time age key staging pattern and the same
 The current backup configuration reuses those BorgBase Restic secrets directly,
 so no extra environment secret is required for v1. The v1 scope is the
 RustDesk state directory plus the K3s server token; it does not yet take
-application-consistent embedded-etcd snapshots.
+application-consistent embedded-etcd snapshots. The Restic service keeps its
+own local state under `/srv/restic-backup`.
 
 ## Oracle Notes
 
