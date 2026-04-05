@@ -11,15 +11,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Prepare runner SSH identities
-        shell: bash
-        env:
-          SECRETS_REPO_IDENTITY_FILE: ${{ vars.SECRETS_REPO_IDENTITY_FILE }}
-          EDGE_IDENTITY_FILE: ${{ vars.EDGE_IDENTITY_FILE }}
-        run: |
-          ./scripts/prepare-runner-ssh.sh
+        uses: actions/checkout@v6
 
       - name: Run repo checks
         shell: bash

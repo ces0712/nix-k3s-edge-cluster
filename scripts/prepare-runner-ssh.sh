@@ -3,7 +3,7 @@ set -eu
 
 install -m 700 -d "${HOME}/.ssh"
 
-SECRETS_REPO_IDENTITY_FILE="${SECRETS_REPO_IDENTITY_FILE:-${HOME}/.ssh/infrastructure-secrets}"
+SECRETS_REPO_IDENTITY_FILE="${SECRETS_REPO_IDENTITY_FILE:-${HOME}/.ssh/id_ed25519_github}"
 EDGE_IDENTITY_FILE="${EDGE_IDENTITY_FILE:-${HOME}/.ssh/edge-cluster}"
 RUNNER_TEMP_DIR="${RUNNER_TEMP:-/tmp}"
 SSH_CONFIG_FILE="$(mktemp "${RUNNER_TEMP_DIR}/edge-cluster-git-ssh.XXXXXX")"

@@ -1,9 +1,10 @@
 let
-  envOr = name: fallback:
-    let
-      value = builtins.getEnv name;
-    in
-      if value == "" then fallback else value;
+  envOr = name: fallback: let
+    value = builtins.getEnv name;
+  in
+    if value == ""
+    then fallback
+    else value;
 in {
   imports = [./default.nix];
 
