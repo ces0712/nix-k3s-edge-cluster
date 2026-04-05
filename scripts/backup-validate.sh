@@ -43,8 +43,7 @@ echo
 echo "secret files:"
 for path in \
   "/run/secrets/${repo_secret}" \
-  "/run/secrets/${password_secret}" \
-  "/run/secrets/${env_secret}"
+  "/run/secrets/${password_secret}"
 do
   if $SUDO test -f "$path"; then
     echo "ok  $path"
@@ -54,11 +53,28 @@ do
   fi
 done
 
+if [ "${env_secret}" != "null" ]; then
+  path="/run/secrets/${env_secret}"
+  if $SUDO test -f "$path"; then
+    echo "ok  $path"
+  else
+    echo "missing  $path" >&2
+    exit 1
+  fi
+fi
+
 echo
 echo "repository access:"
-$SUDO -u restic-backup restic snapshots \
-  --repository-file "/run/secrets/${repo_secret}" \
-  --password-file "/run/secrets/${password_secret}" \
-  --environment-file "/run/secrets/${env_secret}" \
-  --compact
+if [ "${env_secret}" = "null" ]; then
+  $SUDO -u restic-backup restic snapshots \
+    --repository-file "/run/secrets/${repo_secret}" \
+    --password-file "/run/secrets/${password_secret}" \
+    --compact
+else
+  $SUDO -u restic-backup restic snapshots \
+    --repository-file "/run/secrets/${repo_secret}" \
+    --password-file "/run/secrets/${password_secret}" \
+    --environment-file "/run/secrets/${env_secret}" \
+    --compact
+fi
 '

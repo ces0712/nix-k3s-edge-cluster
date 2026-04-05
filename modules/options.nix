@@ -107,8 +107,8 @@ in {
       };
 
       environmentSecret = mkOption {
-        type = types.str;
-        default = "backup/restic_environment";
+        type = types.nullOr types.str;
+        default = null;
       };
     };
   };

@@ -51,11 +51,14 @@
     };
 
     backup = {
-      enable = false;
+      enable = true;
       paths = [
         "/srv/edge-cluster/rustdesk"
-        "/var/lib/rancher/k3s/server"
+        "/var/lib/rancher/k3s/server/token"
       ];
+      repositorySecret = "restic/borgbase_repo";
+      passwordSecret = "restic/borgbase_password";
+      environmentSecret = null;
     };
   };
 }

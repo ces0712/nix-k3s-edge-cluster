@@ -51,13 +51,15 @@ This repo intentionally reuses the same secrets repository used by
 - flake input: `git+ssh://git@github.com/ces0712/infrastructure-secrets.git`
 - default SOPS file: `secrets/forgejo.yaml` from that repository
 - reused key today: `tailscale.auth_key`
+- reused backup secrets: `restic.borgbase_repo` and `restic.borgbase_password`
 
 That lets us keep the same deploy-time age key staging pattern and the same
 `sops-nix` mental model you already trust.
 
-If we later enable backup to OCI Object Storage, add a dedicated encrypted file
-such as `secrets/edge-cluster.yaml` in `infrastructure-secrets` and point
-`edgeCluster.sops.defaultSopsFile` at it.
+The current backup configuration reuses those BorgBase Restic secrets directly,
+so no extra environment secret is required for v1. The v1 scope is the
+RustDesk state directory plus the K3s server token; it does not yet take
+application-consistent embedded-etcd snapshots.
 
 ## Oracle Notes
 
