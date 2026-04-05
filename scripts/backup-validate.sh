@@ -23,16 +23,16 @@ else
   SUDO=""
 fi
 
-backup_enabled="$($SUDO nixos-option edgeCluster.backup.enable 2>/dev/null | awk "END { print $NF }")"
+backup_enabled="$($SUDO nixos-option edgeCluster.backup.enable 2>/dev/null | awk "END { print \$NF }")"
 
 if [ "${backup_enabled}" != "true" ]; then
   echo "Backup module disabled on target; skipping backup validation."
   exit 0
 fi
 
-repo_secret="$($SUDO nixos-option edgeCluster.backup.repositorySecret 2>/dev/null | awk "END { print $NF }")"
-password_secret="$($SUDO nixos-option edgeCluster.backup.passwordSecret 2>/dev/null | awk "END { print $NF }")"
-env_secret="$($SUDO nixos-option edgeCluster.backup.environmentSecret 2>/dev/null | awk "END { print $NF }")"
+repo_secret="$($SUDO nixos-option edgeCluster.backup.repositorySecret 2>/dev/null | awk "END { print \$NF }")"
+password_secret="$($SUDO nixos-option edgeCluster.backup.passwordSecret 2>/dev/null | awk "END { print \$NF }")"
+env_secret="$($SUDO nixos-option edgeCluster.backup.environmentSecret 2>/dev/null | awk "END { print \$NF }")"
 
 echo "unit state:"
 $SUDO systemctl is-enabled restic-backups-edge-cluster.timer
