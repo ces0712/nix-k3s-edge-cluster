@@ -28,6 +28,8 @@ help:
   @echo "  just validate       -> validate the deployed node over Tailscale"
   @echo "  just export-kubeconfig -> write a local kubeconfig that points at the Tailscale host"
   @echo "  just backup-validate -> validate backup readiness when enabled"
+  @echo "  just restore-check  -> verify restore prerequisites without changing live data"
+  @echo "  just restore        -> restore RustDesk state and K3s token from Restic"
   @echo "  just upgrade-rehearsal -> run checks and optionally deploy/validate a rehearsal target"
   @echo ""
   @echo "Variables:"
@@ -81,6 +83,12 @@ export-kubeconfig:
 
 backup-validate:
   NODE_NAME={{NODE_NAME}} TARGET_HOST={{TARGET_HOST}} DEPLOY_USER={{DEPLOY_USER}} IDENTITY_FILE={{IDENTITY_FILE}} ./scripts/backup-validate.sh
+
+restore-check:
+  NODE_NAME={{NODE_NAME}} TARGET_HOST={{TARGET_HOST}} DEPLOY_USER={{DEPLOY_USER}} IDENTITY_FILE={{IDENTITY_FILE}} RESTORE_DRY_RUN=1 ./scripts/restore.sh
+
+restore:
+  NODE_NAME={{NODE_NAME}} TARGET_HOST={{TARGET_HOST}} DEPLOY_USER={{DEPLOY_USER}} IDENTITY_FILE={{IDENTITY_FILE}} ./scripts/restore.sh
 
 upgrade-rehearsal:
   NODE_NAME={{NODE_NAME}} TARGET_HOST={{TARGET_HOST}} DEPLOY_USER={{DEPLOY_USER}} IDENTITY_FILE={{IDENTITY_FILE}} SOPS_AGE_KEY_FILE={{SOPS_AGE_KEY_FILE}} SOPS_AGE_KEY_PASS_ENTRY={{SOPS_AGE_KEY_PASS_ENTRY}} ./scripts/upgrade-rehearsal.sh

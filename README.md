@@ -102,6 +102,7 @@ just colmena-eval
 TARGET_HOST=<tailscale-host> just deploy
 TARGET_HOST=<tailscale-host> just validate
 TARGET_HOST=<tailscale-host> just backup-validate
+TARGET_HOST=<tailscale-host> just restore-check
 TARGET_HOST=<tailscale-host> just export-kubeconfig
 ```
 
@@ -129,6 +130,34 @@ TARGET_HOST=<tailscale-host> DEPLOY_USER=nixos IDENTITY_FILE=<admin-private-key>
 KUBECONFIG=$HOME/.kubeconfig/cloud-edge-1.yaml kubectl get nodes
 KUBECONFIG=$HOME/.kubeconfig/cloud-edge-1.yaml k9s
 ```
+
+## Restore Workflow
+
+The restore path intentionally mirrors the proven Forgejo Pi workflow:
+
+1. verify backup readiness
+2. verify restore readiness without changing live data
+3. run the destructive restore only when the checks pass
+
+Commands:
+
+```bash
+TARGET_HOST=<tailscale-host> just backup-validate
+TARGET_HOST=<tailscale-host> just restore-check
+TARGET_HOST=<tailscale-host> just restore
+```
+
+Current restore scope:
+
+- RustDesk state under `/srv/edge-cluster/rustdesk`
+- K3s server token at `/var/lib/rancher/k3s/server/token`
+
+Important:
+
+- the restore is filtered to snapshots for host `cloud-edge-1`
+- the shared Restic repository is reused with `forgejo-pi`, so host filtering is required
+- this does **not** yet restore embedded-etcd/K3s control-plane state
+- `just restore` stops `k3s`, restores the backed-up paths, and starts `k3s` again
 
 ## CI / Runner Notes
 
