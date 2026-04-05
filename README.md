@@ -108,8 +108,8 @@ Bootstrap sequence:
 # bootstrap enabled in hosts/cloud-edge-1/default.nix
 # root bootstrap deploy automatically uses the flake-pinned nixos-rebuild
 # and runs switch --install-bootloader
-TARGET_HOST=<public-ip> DEPLOY_USER=root IDENTITY_FILE=/Users/ces0712/.ssh/oracle-bootstrap just deploy
-TARGET_HOST=<public-ip> DEPLOY_USER=root IDENTITY_FILE=/Users/ces0712/.ssh/oracle-bootstrap just validate
+TARGET_HOST=<public-ip> DEPLOY_USER=root IDENTITY_FILE=$HOME/.ssh/oracle-bootstrap just deploy
+TARGET_HOST=<public-ip> DEPLOY_USER=root IDENTITY_FILE=$HOME/.ssh/oracle-bootstrap just validate
 
 # reboot while bootstrap mode is still enabled and verify SSH + Tailscale
 
