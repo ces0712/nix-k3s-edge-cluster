@@ -96,10 +96,10 @@ Common commands:
 just fmt-check
 just build-eval
 just colmena-eval
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just deploy
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just validate
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just backup-validate
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just export-kubeconfig
+TARGET_HOST=<tailscale-host> just deploy
+TARGET_HOST=<tailscale-host> just validate
+TARGET_HOST=<tailscale-host> just backup-validate
+TARGET_HOST=<tailscale-host> just export-kubeconfig
 ```
 
 Bootstrap sequence:
@@ -114,15 +114,15 @@ TARGET_HOST=<public-ip> DEPLOY_USER=root IDENTITY_FILE=$HOME/.ssh/oracle-bootstr
 # reboot while bootstrap mode is still enabled and verify SSH + Tailscale
 
 # then disable edgeCluster.bootstrap.enable and close OCI bootstrap access
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just deploy
-TARGET_HOST=cloud-edge-1.tailnet.ts.net just validate
+TARGET_HOST=<tailscale-host> just deploy
+TARGET_HOST=<tailscale-host> just validate
 ```
 
 To use `kubectl` or `k9s` from your Mac, export a kubeconfig that points to the
 Tailscale host:
 
 ```bash
-TARGET_HOST=cloud-edge-1.tailnet.ts.net DEPLOY_USER=nixos IDENTITY_FILE=<admin-private-key> just export-kubeconfig
+TARGET_HOST=<tailscale-host> DEPLOY_USER=nixos IDENTITY_FILE=<admin-private-key> just export-kubeconfig
 KUBECONFIG=$HOME/.kubeconfig/cloud-edge-1.yaml kubectl get nodes
 KUBECONFIG=$HOME/.kubeconfig/cloud-edge-1.yaml k9s
 ```
@@ -142,13 +142,15 @@ reconstructing private keys from CI secrets:
 
 - `EDGE_IDENTITY_FILE` points to the runner-local key used by Colmena to reach
   the target over Tailscale
+- `EDGE_TARGET_HOST` is provided to workflows as a Forgejo secret for the
+  target's Tailscale/MagicDNS hostname
 - if it is not set, the deploy scripts fall back to your existing local SSH
   configuration and agent state
 
 That keeps the Mac mini as the trust anchor and leaves the workflows
 responsible for invoking the deploy scripts over the runner's existing tailnet
 access. Colmena still uses SSH as its transport, but only to the
-Tailscale/MagicDNS target you provide.
+Tailscale/MagicDNS target passed in through workflow configuration.
 
 ## Upgrade Strategy
 
