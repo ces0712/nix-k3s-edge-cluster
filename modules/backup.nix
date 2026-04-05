@@ -5,10 +5,9 @@
   ...
 }: let
   cfg = config.edgeCluster.backup;
-  environmentFile =
-    lib.optionalAttrs (cfg.environmentSecret != null) {
-      environmentFile = config.sops.secrets.${cfg.environmentSecret}.path;
-    };
+  environmentFile = lib.optionalAttrs (cfg.environmentSecret != null) {
+    environmentFile = config.sops.secrets.${cfg.environmentSecret}.path;
+  };
 in
   lib.mkIf cfg.enable {
     users.users.restic-backup = {
