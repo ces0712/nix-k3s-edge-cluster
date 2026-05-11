@@ -153,16 +153,9 @@ should_install_bootloader() {
   esac
 }
 
-cleanup_efi_space() {
-  echo "Cleaning EFI temp files on ${TARGET} ..."
-  remote_run "${SSH_OPTS}" "${TARGET}" "sudo sh -c 'rm -f /boot/efi/EFI/nixos/*.tmp 2>/dev/null; echo Done'" || echo "EFI cleanup failed, continuing..."
-}
-
 resolve_age_key_source
 prepare_remote_time
 push_age_key_to_target
-
-cleanup_efi_space
 
 if should_install_bootloader; then
   echo "Running bootstrap deploy with nixos-rebuild --install-bootloader on ${TARGET} ..."

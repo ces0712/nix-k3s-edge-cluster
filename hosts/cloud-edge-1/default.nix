@@ -12,8 +12,9 @@
     fsType = "ext4";
   };
 
-  # Oracle Cloud ARM boots via UEFI. Keep the EFI system partition mounted and
-  # let systemd-boot manage boot entries there.
+  # Oracle Cloud ARM boots via UEFI. The EFI system partition is only 98MB,
+  # too small for systemd-boot which stores kernels on the ESP. Using GRUB
+  # instead so kernels live on the root filesystem.
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/UEFI";
     fsType = "vfat";
@@ -23,14 +24,18 @@
     ];
   };
 
-  boot.loader.systemd-boot = {
-    enable = true;
-    editor = false;
-    configurationLimit = 2;
-  };
-  boot.loader.efi = {
-    canTouchEfiVariables = true;
-    efiSysMountPoint = "/boot/efi";
+  boot.loader = {
+    efi = {
+      canTouchEfiVariables = false;
+      efiSysMountPoint = "/boot/efi";
+    };
+    grub = {
+      enable = true;
+      efiSupport = true;
+      efiInstallAsRemovable = true;
+      device = "nodev";
+      configurationLimit = 10;
+    };
   };
   boot.kernelParams = ["net.ifnames=0"];
 
