@@ -83,7 +83,23 @@ For the current Oracle ARM image flow, the repo expects:
 
 - root filesystem label: `cloudimg-rootfs`
 - EFI partition label: `UEFI`
-- `systemd-boot` on `/boot/efi`
+- GRUB on `/boot/efi` with `efiInstallAsRemovable = true`
+
+### Bootloader choice: GRUB over systemd-boot
+
+Oracle Cloud ARM instances ship with a ~98MB EFI System Partition (ESP).
+ARM64 NixOS kernels are ~58MB each, and systemd-boot requires kernels to reside
+on the ESP. With only 98MB available, even `configurationLimit = 2` cannot hold
+two different kernel generations during a kernel update (old + new = ~138MB > 98MB).
+
+GRUB reads kernels from the root filesystem instead of the ESP, so only the GRUB
+binary (~150KB) lives on the ESP. This eliminates ESP space constraints entirely.
+The configuration uses `efiInstallAsRemovable = true` because Oracle Cloud firmware
+does not expose writable EFI variables.
+
+See [nixos-infect #192](https://github.com/elitak/nixos-infect/issues/192) and
+[nixos-infect #179](https://github.com/elitak/nixos-infect/pull/179) for
+community context on this problem.
 
 ## Local Workflow
 
