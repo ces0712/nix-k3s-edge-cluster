@@ -2,7 +2,7 @@
   description = "Private Tailscale-only K3s platform on NixOS";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 
     alejandra = {
       url = "github:kamadorueda/alejandra";
@@ -12,6 +12,7 @@
     colmena = {
       url = "github:zhaofengli/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.stable.follows = "nixpkgs";
     };
 
     sops-nix = {
