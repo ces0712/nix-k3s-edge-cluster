@@ -143,11 +143,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1787101114,
-        "narHash": "sha256-gwrPcFf/rDjHPaVflbDZ040ZDmBTRj/7+s8ZmE2SaIM=",
+        "lastModified": 1787962033,
+        "narHash": "sha256-u6z9VTZA4Kf3RkHQo9sQI7NI4Ei/uiU9vrMqOiwWP1Y=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b18a4b905f8d028dc4476412e6d6891728695379",
+        "rev": "c5c4a43b0e8056328ec4529f735cabdb8f1942bb",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1780859775,
-        "narHash": "sha256-PzpjULbfcry6JA+s99SSncuxTiKiiCF9wfi9jSTufzI=",
+        "lastModified": 1788037386,
+        "narHash": "sha256-bq5+uYQ/+qV+uNQQyesAWxz7BzikBXKGrpDkEZ/HDV8=",
         "ref": "refs/heads/main",
-        "rev": "4d6ec8f3c8591cb0eba40fd1aa349d7d8555834e",
-        "revCount": 18,
+        "rev": "f3d1a86a3ac72a473bf79329959939a6dd24d090",
+        "revCount": 19,
         "type": "git",
         "url": "ssh://git@github.com/ces0712/infrastructure-secrets.git"
       },
