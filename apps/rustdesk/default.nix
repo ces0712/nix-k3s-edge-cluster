@@ -79,6 +79,16 @@ in
                       "-r"
                       "${cfg.serverHost}:${toString cfg.ports.relay}"
                     ];
+                    resources = {
+                      requests = {
+                        cpu = "10m";
+                        memory = "16Mi";
+                      };
+                      limits = {
+                        cpu = "100m";
+                        memory = "64Mi";
+                      };
+                    };
                     ports =
                       [
                         {
@@ -115,6 +125,16 @@ in
                     name = "hbbr";
                     image = cfg.image;
                     args = ["hbbr"];
+                    resources = {
+                      requests = {
+                        cpu = "10m";
+                        memory = "16Mi";
+                      };
+                      limits = {
+                        cpu = "250m";
+                        memory = "128Mi";
+                      };
+                    };
                     ports =
                       [
                         {

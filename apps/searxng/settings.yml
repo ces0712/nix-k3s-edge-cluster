@@ -1,0 +1,34 @@
+use_default_settings:
+  engines:
+    keep_only:
+      - braveapi
+      - google images
+
+general:
+  instance_name: Private Search
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  formats:
+    - html
+    - json
+
+server:
+  limiter: false
+  image_proxy: true
+  secret_key: "@SEARXNG_SECRET_KEY@"
+
+engines:
+  - name: braveapi
+    engine: braveapi
+    api_key: "@BRAVE_API_KEY@"
+    inactive: false
+    disabled: false
+    categories:
+      - general
+
+  - name: google images
+    disabled: false
+    categories:
+      - images

@@ -56,6 +56,11 @@
       enableWebClient = false;
     };
 
+    apps.searxng = {
+      enable = true;
+      publicUrl = "https://cloud-edge-1.tail8f7f61.ts.net/";
+    };
+
     backup = {
       enable = true;
       stateDir = "/srv/restic-backup";

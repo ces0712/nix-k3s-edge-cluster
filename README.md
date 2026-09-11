@@ -200,6 +200,45 @@ responsible for invoking the deploy scripts over the runner's existing tailnet
 access. Colmena still uses SSH as its transport, but only to the
 Tailscale/MagicDNS target passed in through workflow configuration.
 
+## Private SearXNG
+
+SearXNG runs as a stateless K3s workload and is reachable only through
+Tailscale Serve at `https://cloud-edge-1.tail8f7f61.ts.net/` on HTTPS port
+`443`. The pod listens on host loopback port `8080`; no public ingress or
+Kubernetes LoadBalancer is created.
+
+- Image: `docker.io/searxng/searxng:2026.9.3-745d5b6fc@sha256:3cbe78486a5e4f7c7fe22e2ba82b28d02390e7fc03b1139f5788b07d2ac0a1f8`
+- Enabled engines: Brave API for web search and Google Images for image search
+- Secret inputs: `searxng/brave_api_key` and `searxng/secret_key` from the
+  secrets repository's `secrets/k3s.yaml`
+- Settings source: `apps/searxng/settings.yml`; `sops-nix` substitutes its
+  placeholders on the host at runtime and mounts the rendered file at
+  `/etc/searxng/settings.yml` in the pod
+- Secret file changes alter the pod-template annotation, causing Kubernetes to
+  roll out a pod that reads the newly rendered settings
+- Storage: none; there is no PVC, persistent application state, or SearXNG
+  backup/restore scope
+
+Do not print or copy the rendered settings file: it contains secret values.
+Tailscale runs with tailnet DNS enabled, so the advertised MagicDNS name
+resolves for connected tailnet clients, not public DNS clients. Inside K3s,
+the pod uses cluster DNS for upstream Brave and Google requests.
+
+Validate after deployment:
+
+```sh
+TARGET_HOST=<tailscale-host> just validate
+KUBECONFIG=$HOME/.kubeconfig/cloud-edge-1.yaml \
+  kubectl -n searxng rollout status deployment/searxng
+curl -fsS https://cloud-edge-1.tail8f7f61.ts.net/healthz
+```
+
+Check for a newer versioned Docker Hub image with `just
+check-searxng-updates`. The checker verifies a `linux/arm64` child manifest
+and exits `2` when the latest tag or OCI index digest differs. Review the
+upstream release, replace both tag and index digest in `modules/options.nix`,
+then run `just check`, deploy, and repeat the validation above.
+
 ## Upgrade Strategy
 
 - Pin dependencies in `flake.lock` and commit the lock file

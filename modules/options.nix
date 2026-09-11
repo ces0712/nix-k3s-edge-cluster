@@ -88,6 +88,40 @@ in {
       };
     };
 
+    apps.searxng = {
+      enable = mkEnableOption "private SearXNG instance on K3s";
+
+      image = mkOption {
+        type = types.str;
+        default = "docker.io/searxng/searxng:2026.9.3-745d5b6fc@sha256:3cbe78486a5e4f7c7fe22e2ba82b28d02390e7fc03b1139f5788b07d2ac0a1f8";
+        description = "Digest-pinned SearXNG OCI image.";
+      };
+
+      listenAddress = mkOption {
+        type = types.str;
+        default = "127.0.0.1";
+        description = "Host address where the SearXNG pod listens.";
+      };
+
+      port = mkOption {
+        type = types.port;
+        default = 8080;
+        description = "Host port where the SearXNG pod listens.";
+      };
+
+      httpsPort = mkOption {
+        type = types.port;
+        default = 443;
+        description = "Tailscale Serve HTTPS port for SearXNG.";
+      };
+
+      publicUrl = mkOption {
+        type = types.str;
+        default = "https://cloud-edge-1.tail8f7f61.ts.net/";
+        description = "Tailnet-only public URL advertised by SearXNG.";
+      };
+    };
+
     backup = {
       enable = mkEnableOption "restic backups for cluster state and workloads";
 
