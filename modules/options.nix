@@ -93,7 +93,7 @@ in {
 
       image = mkOption {
         type = types.str;
-        default = "docker.io/searxng/searxng:2026.9.18-c0042add3@sha256:e0027a772aeeea55bf642256aae6fb3344ffa5f25ca665898c2ea821101334c4";
+        default = "docker.io/searxng/searxng:2026.9.25-12f8b6515@sha256:5286edb35782454ab8a102c5eff6b54bff745853191b46aeead95f225aa6dfb6";
         description = "Digest-pinned SearXNG OCI image.";
       };
 
