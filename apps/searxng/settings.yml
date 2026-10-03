@@ -2,7 +2,7 @@ use_default_settings:
   engines:
     keep_only:
       - braveapi
-      - google images
+      - brave.images
 
 general:
   instance_name: Private Search
@@ -28,7 +28,17 @@ engines:
     categories:
       - general
 
-  - name: google images
+  - name: brave.images
+    engine: brave
+    network: brave
+    shortcut: brimg
+    categories:
+      - images
+      - web
+    brave_category: images
     disabled: false
+
+  - name: google images
+    disabled: true
     categories:
       - images
