@@ -84,6 +84,8 @@ in {
               };
               metadata.annotations."edge-cluster/secrets-hash" =
                 builtins.hashFile "sha256" (secrets + "/secrets/k3s.yaml");
+              metadata.annotations."edge-cluster/settings-hash" =
+                builtins.hashString "sha256" settingsTemplate;
               spec = {
                 hostNetwork = true;
                 dnsPolicy = "ClusterFirstWithHostNet";
