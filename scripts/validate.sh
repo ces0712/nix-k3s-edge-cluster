@@ -78,8 +78,8 @@ test "${searxng_replicas:-0}" -ge 1
 test "${searxng_public_url}" = "https://${tailscale_fqdn}/"
 printf "%s" "${serve_status}" | grep -Fq "127.0.0.1:8080"
 printf "%s" "${searxng_config}" | jq -e "[.engines[] | select(.name == \"braveapi\" and .enabled == true)] | length == 1" >/dev/null
-printf "%s" "${searxng_config}" | jq -e "[.engines[] | select(.name == \"google images\" and .enabled == true)] | length == 1" >/dev/null
-printf "%s" "${searxng_config}" | jq -e "[.engines[] | select(.name == \"google\" or .name == \"brave\")] | length == 0" >/dev/null
+printf "%s" "${searxng_config}" | jq -e "[.engines[] | select(.name == \"bing images\" and .enabled == true)] | length == 1" >/dev/null
+printf "%s" "${searxng_config}" | jq -e "[.engines[] | select(.name == \"google images\" or .name == \"google\" or .name == \"brave\")] | length == 0" >/dev/null
 $SUDO ss -lnt | grep -Eq "127\\.0\\.0\\.1:8080"
 ! $SUDO ss -lnt | grep -Eq "(^|[[:space:]])(0\\.0\\.0\\.0|\\[::\\]):8080([[:space:]]|$)"
 '
