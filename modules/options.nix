@@ -90,10 +90,9 @@ in {
 
     apps.searxng = {
       enable = mkEnableOption "private SearXNG instance on K3s";
-
       image = mkOption {
         type = types.str;
-        default = "docker.io/searxng/searxng:2026.10.17-1c10abe2d@sha256:8bdd9aa136b2dc3b9332cf24714fa34a375b8a1949a1201ec900c24d7378596e";
+        default = "docker.io/searxng/searxng:2026.10.24-ef0ec03da@sha256:7c7cbe509429e82755104b2a95f52085a98633c95d53f44e4e905fa3a59f08c8";
         description = "Digest-pinned SearXNG OCI image.";
       };
 
